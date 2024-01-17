@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-
+const gravatar = require("gravatar");
 const { handleMongooseError } = require("../helpers");
 const { emailRegexp } = require("../constants/regex");
 
@@ -24,11 +24,19 @@ const userSchema = new Schema(
     token: {
       type: String,
     },
+    avatarURL: {
+      type: String,
+    },
   },
-  { versionKey: false }
+  { timestamps: false, versionKey: false }
 );
 
 userSchema.post("save", handleMongooseError);
+
+// Додайте метод для генерації аватара з використанням Gravatar
+userSchema.methods.generateAvatar = function () {
+  this.avatarURL = gravatar.url(this.email, { s: "250", d: "retro" });
+};
 
 const registerSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
