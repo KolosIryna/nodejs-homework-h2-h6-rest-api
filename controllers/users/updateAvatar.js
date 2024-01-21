@@ -18,14 +18,10 @@ const updateAvatar = async (req, res) => {
     await User.findByIdAndUpdate(_id, { avatarURL });
     await fs.unlink(tempUpload);
 
-    res.status(200).json({
-      avatarURL,
-    });
+    res.status(200).json({ code: 200, avatarURL });
   } catch (error) {
     console.error("Error in updateAvatar:", error);
-    res.status(500).json({
-      message: "Internal Server Error",
-    });
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 };
 
